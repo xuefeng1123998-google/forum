@@ -1,0 +1,12 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="card side-card" style="max-width:560px; margin:0 auto;">
+  <h2>注册成员账号</h2>
+  <form class="stack" method="post">
+    <input name="username" placeholder="用户名（至少 3 位）">
+    <input name="password" type="password" placeholder="密码（至少 6 位）">
+    <button type="submit">注册</button>
+  </form>
+</div>
+{% endblock %}

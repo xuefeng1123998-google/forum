@@ -1,0 +1,68 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="grid">
+  <section>
+    <div class="card side-card">
+      <h2>管理员操作台</h2>
+      <p class="small">这里保留最核心管理功能：发布公告、设精华、下架帖子。</p>
+      <h3>发布新公告</h3>
+      <form class="stack" method="post" action="{{ url_for('new_announcement') }}">
+        <input name="title" placeholder="公告标题">
+        <textarea name="body" placeholder="公告内容"></textarea>
+        <button type="submit">发布公告</button>
+      </form>
+    </div>
+  </section>
+
+  <aside>
+    <div class="card side-card">
+      <h3>现有公告</h3>
+      {% for item in announcements %}
+        <div class="archive-item">
+          <strong>{{ item.title }}</strong>
+          <div class="small" style="margin-top:6px;">{{ item.body }}</div>
+        </div>
+      {% else %}
+        <div class="archive-item">暂无公告</div>
+      {% endfor %}
+    </div>
+  </aside>
+</div>
+
+<div class="card side-card" style="margin-top:18px;">
+  <h3>帖子管理</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>标题</th>
+        <th>作者</th>
+        <th>状态</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for post in posts %}
+      <tr>
+        <td><a href="{{ url_for('post_detail', post_id=post.id) }}">{{ post.title }}</a></td>
+        <td>{{ post.username }}</td>
+        <td>
+          {{ '已下架' if post.is_hidden else '展示中' }}
+          {% if post.is_featured %} / 精华{% endif %}
+        </td>
+        <td>
+          <div class="actions">
+            <form method="post" action="{{ url_for('toggle_feature', post_id=post.id) }}">
+              <button type="submit" class="btn secondary">{{ '取消精华' if post.is_featured else '设为精华' }}</button>
+            </form>
+            <form method="post" action="{{ url_for('toggle_hide', post_id=post.id) }}">
+              <button type="submit" class="btn secondary">{{ '恢复展示' if post.is_hidden else '下架帖子' }}</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

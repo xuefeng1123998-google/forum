@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title or '大学社团论坛' }}</title>
+  <style>
+    :root{
+      --bg1:#fefcf8; --bg2:#f4f1ea; --bg3:#edeae3; --card:#ffffffdd;
+      --line:#e8e2d8; --text:#2c2a28; --muted:#6f6a62; --green:#1f5a47;
+      --amber:#8b5e22; --stone:#f7f5f1; --shadow:0 10px 30px rgba(63,54,41,.08);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+      color:var(--text);
+      background: radial-gradient(circle at top, var(--bg1), var(--bg2), var(--bg3));
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1150px;margin:0 auto;padding:18px}
+    .nav{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+      margin-bottom:18px;padding:16px 18px;background:#ffffffd9;border:1px solid var(--line);
+      border-radius:22px; box-shadow:var(--shadow); backdrop-filter:blur(10px);
+    }
+    .brand{font-weight:700}
+    .navlinks{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .btn,.btn-link,button{
+      border:none;border-radius:16px;padding:10px 14px;background:#1f1f1f;color:#fff;cursor:pointer;font-size:14px;
+    }
+    .btn.secondary,.btn-link.secondary{background:#fff;color:#333;border:1px solid var(--line)}
+    .btn-link{display:inline-block}
+    .flash{margin-bottom:14px;padding:12px 14px;background:#fff5d8;border:1px solid #eddcaa;border-radius:16px;color:#6b4e16}
+    .card{
+      background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+      box-shadow:var(--shadow);backdrop-filter:blur(10px);
+    }
+    .hero{padding:24px;margin-bottom:16px}
+    .hero h1{margin:0;font-size:40px;line-height:1.25}
+    .hero p{color:var(--muted);line-height:1.9}
+    .grid{display:grid;grid-template-columns:1.55fr .75fr;gap:18px}
+    .sticky{position:sticky;top:0;z-index:20}
+    .announce{padding:14px;background:#fff8e8;border:1px solid #ecdcae;border-radius:22px;margin-bottom:16px}
+    .announce-item{background:#fffdf8;border:1px solid #efdfb5;border-radius:18px;padding:14px;margin-top:10px}
+    .announce-item h4{margin:0 0 8px}
+    .post{padding:18px;margin-bottom:14px}
+    .meta{color:#807970;font-size:13px}
+    .tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+    .tag{display:inline-flex;border-radius:999px;padding:6px 10px;background:#fff;border:1px solid var(--line);font-size:12px}
+    .tag.featured{background:#fff3cf;color:var(--amber);border-color:#f0dfb3}
+    .side-card{padding:18px}
+    .side-card h3{margin-top:0}
+    .archive-item{background:#f9f7f3;border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:10px}
+    form.stack{display:grid;gap:12px}
+    input, textarea, select{
+      width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;font-size:14px;
+      font-family:inherit;
+    }
+    textarea{min-height:140px;resize:vertical}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .comment{padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:14px;margin-top:10px}
+    .small{font-size:13px;color:var(--muted)}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:12px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:14px;vertical-align:top}
+    @media (max-width: 900px){ .grid{grid-template-columns:1fr} .hero h1{font-size:32px} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="nav">
+      <div class="brand">大学社团论坛 · 轻量可用版</div>
+      <div class="navlinks">
+        <a class="btn-link secondary" href="{{ url_for('index') }}">首页</a>
+        {% if current_user.id %}
+          <a class="btn-link secondary" href="{{ url_for('new_post') }}">发帖</a>
+          {% if current_user.role == 'admin' %}
+            <a class="btn-link secondary" href="{{ url_for('admin') }}">管理台</a>
+          {% endif %}
+          <span class="small">已登录：{{ current_user.username }}（{{ '管理员' if current_user.role=='admin' else '成员' }}）</span>
+          <a class="btn-link" href="{{ url_for('logout') }}">退出</a>
+        {% else %}
+          <a class="btn-link secondary" href="{{ url_for('login') }}">登录</a>
+          <a class="btn-link" href="{{ url_for('register') }}">注册</a>
+        {% endif %}
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="flash">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

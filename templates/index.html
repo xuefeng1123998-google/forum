@@ -1,0 +1,61 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="card hero">
+  <h1>在安静的页面里，留下读书的回声</h1>
+  <p>这是一个可运行的轻量版本：支持登录、注册、发帖、评论、点赞、管理员公告置顶、精华帖与后审下架。适合你先试流程，而不是先做复杂系统。</p>
+</div>
+
+<div class="grid">
+  <section>
+    <div class="announce sticky">
+      <strong>📌 置顶公告</strong>
+      {% for item in announcements %}
+      <div class="announce-item">
+        <h4>{{ item.title }}</h4>
+        <div class="small">{{ item.body }}</div>
+        <div class="meta" style="margin-top:8px;">{{ item.author_name or '管理员' }} · {{ item.created_at }}</div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% for post in posts %}
+      <div class="card post">
+        <div class="tags">
+          {% if post.is_featured %}<span class="tag featured">精华帖</span>{% endif %}
+          <span class="tag">{{ post.section }}</span>
+        </div>
+        <h3 style="margin:0 0 10px;"><a href="{{ url_for('post_detail', post_id=post.id) }}">{{ post.title }}</a></h3>
+        <div class="meta">{{ post.username }} · {{ post.created_at }} · {{ post.likes_count }} 赞 · {{ post.comments_count }} 评论</div>
+        <p style="line-height:1.9; color:#514c45;">{{ post.body[:140] }}{% if post.body|length > 140 %}...{% endif %}</p>
+        <div class="actions">
+          <form method="post" action="{{ url_for('like_post', post_id=post.id) }}">
+            <button type="submit" class="btn secondary">点赞 / 取消点赞</button>
+          </form>
+          <a class="btn-link secondary" href="{{ url_for('post_detail', post_id=post.id) }}">进入帖子</a>
+        </div>
+      </div>
+    {% else %}
+      <div class="card post">还没有帖子，去发第一篇吧。</div>
+    {% endfor %}
+  </section>
+
+  <aside>
+    <div class="card side-card">
+      <h3>精华沉淀区</h3>
+      {% for item in featured %}
+      <div class="archive-item">
+        <div class="tags">
+          <span class="tag featured">精华帖</span>
+          <span class="tag">{{ item.section }}</span>
+        </div>
+        <div><strong><a href="{{ url_for('post_detail', post_id=item.id) }}">{{ item.title }}</a></strong></div>
+        <div class="small" style="margin-top:6px;">{{ item.username }} · {{ item.created_at }}</div>
+      </div>
+      {% else %}
+      <div class="archive-item">暂时还没有精华帖。</div>
+      {% endfor %}
+    </div>
+  </aside>
+</div>
+{% endblock %}

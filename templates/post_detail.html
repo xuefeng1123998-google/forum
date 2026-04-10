@@ -1,0 +1,42 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="card post">
+  <div class="tags">
+    {% if post.is_featured %}<span class="tag featured">精华帖</span>{% endif %}
+    <span class="tag">{{ post.section }}</span>
+  </div>
+  <h2 style="margin:0 0 10px;">{{ post.title }}</h2>
+  <div class="meta">{{ post.username }} · {{ post.created_at }} · {{ post.likes_count }} 赞</div>
+  <p style="line-height:2; white-space:pre-wrap;">{{ post.body }}</p>
+  <div class="actions">
+    <form method="post" action="{{ url_for('like_post', post_id=post.id) }}">
+      <button type="submit" class="btn secondary">{{ '取消点赞' if liked else '点赞' }}</button>
+    </form>
+  </div>
+</div>
+
+<div class="card side-card" style="margin-top:16px;">
+  <h3>评论区</h3>
+  {% if current_user.id %}
+  <form class="stack" method="post">
+    <textarea name="body" placeholder="写下你的评论"></textarea>
+    <button type="submit">发表评论</button>
+  </form>
+  {% else %}
+  <div class="small">请先 <a href="{{ url_for('login') }}">登录</a> 后评论。</div>
+  {% endif %}
+
+  <div style="margin-top:16px;">
+    {% for comment in comments %}
+      <div class="comment">
+        <strong>{{ comment.username }}</strong>
+        <div class="small">{{ comment.created_at }}</div>
+        <div style="margin-top:6px; line-height:1.8;">{{ comment.body }}</div>
+      </div>
+    {% else %}
+      <div class="small">还没有评论。</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
