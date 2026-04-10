@@ -1,0 +1,18 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="card side-card" style="max-width:760px; margin:0 auto;">
+  <h2>发布新帖子</h2>
+  <form class="stack" method="post">
+    <input name="title" placeholder="帖子标题">
+    <select name="section">
+      <option value="读书感想">读书感想</option>
+      <option value="活动交流">活动交流</option>
+      <option value="资料整理">资料整理</option>
+      <option value="新成员报到">新成员报到</option>
+    </select>
+    <textarea name="body" placeholder="写下你的内容"></textarea>
+    <button type="submit">发布</button>
+  </form>
+</div>
+{% endblock %}

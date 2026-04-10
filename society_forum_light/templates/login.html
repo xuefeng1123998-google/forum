@@ -1,0 +1,13 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="card side-card" style="max-width:560px; margin:0 auto;">
+  <h2>登录</h2>
+  <div class="small" style="margin-bottom:12px;">演示账号：管理员 admin / admin123，成员 member1 / member123</div>
+  <form class="stack" method="post">
+    <input name="username" placeholder="用户名">
+    <input name="password" type="password" placeholder="密码">
+    <button type="submit">登录</button>
+  </form>
+</div>
+{% endblock %}
